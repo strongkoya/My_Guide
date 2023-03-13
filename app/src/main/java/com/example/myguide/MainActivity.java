@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                     // FindNearBy(36.6482673,10.2941294);
 
 
-                    Toast.makeText(getApplicationContext(), city, Toast.LENGTH_LONG).show();
+                  //  Toast.makeText(getApplicationContext(), city, Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(),getString(R.string.error_msg_local) , Toast.LENGTH_LONG).show();
 
