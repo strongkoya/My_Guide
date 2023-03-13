@@ -51,7 +51,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
         android:ems="10"
-        android:hint="Enter City Name"
+        android:hint="@string/enter_city_name"
         android:inputType="textPersonName"
         android:paddingLeft="15dp"
         android:textColor="#FFFFFF"
@@ -82,7 +82,7 @@
         android:padding="10dp"
         android:text="@string/search_nearby"
         android:textColor="#FBFBFB"
-        android:textSize="20dp"
+        android:textSize="17sp"
         />
         <Button
             android:id="@+id/buttonLocation"
@@ -93,7 +93,7 @@
             android:padding="10dp"
             android:text="@string/location"
             android:textColor="#FBFBFB"
-            android:textSize="20dp"/>
+            android:textSize="17sp"/>
         </LinearLayout>
         <Button
             android:id="@+id/show_options_button"
@@ -104,7 +104,7 @@
             android:padding="10dp"
             android:text="@string/more_options"
             android:textColor="#FBFBFB"
-            android:textSize="20dp"
+            android:textSize="17sp"
             android:layout_gravity="center"/>
         <Button
             android:id="@+id/hide_button"
@@ -115,7 +115,7 @@
             android:padding="10dp"
             android:text="@string/hide_options"
             android:textColor="#FBFBFB"
-            android:textSize="20dp"
+            android:textSize="17sp"
             android:layout_gravity="center"
             android:visibility="gone"/>
 

@@ -14,4 +14,5 @@
     <string name="select_integer_limit_3_30">Selectionner une limite (3-30)</string>
     <string name="select_distance_5km_500km">Selectionner une distance (5km-500km)</string>
     <string name="select_a_category">Selectionner une categorie:</string>
+    <string name="enter_city_name">Saisissez une ville</string>
 </resources>
