@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/imgPlaylistItemBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:maxHeight="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/backt" />
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backa">
+    >
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,6 +38,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
     <EditText
         android:id="@+id/editTextTextPersonName"
@@ -54,54 +63,217 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" >
+        android:layout_marginBottom="15dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
 
     <Button
         android:id="@+id/button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_margin="15dp"
         android:background="#95000000"
         android:padding="10dp"
-        android:text="Search NearBy"
+        android:text="@string/search_nearby"
         android:textColor="#FBFBFB"
         android:textSize="20dp"
         />
         <Button
             android:id="@+id/buttonLocation"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_margin="15dp"
             android:background="#95000000"
             android:padding="10dp"
-            android:text="My location"
+            android:text="@string/location"
             android:textColor="#FBFBFB"
             android:textSize="20dp"/>
         </LinearLayout>
+        <Button
+            android:id="@+id/show_options_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="#95000000"
+            android:padding="10dp"
+            android:text="@string/more_options"
+            android:textColor="#FBFBFB"
+            android:textSize="20dp"
+            android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/hide_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="#95000000"
+            android:padding="10dp"
+            android:text="@string/hide_options"
+            android:textColor="#FBFBFB"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/options_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone"
+            android:background="#6B0C0C0C"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_integer_limit_3_30"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
+            <TextView
+                android:id="@+id/limit_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:text="10"
+                android:gravity="center"/>
+
+            <SeekBar
+                android:id="@+id/limit_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="30"
+                android:min="3"
+                android:progress="7"
+                android:padding="16dp"
+                android:thumbTint="@color/colorAccent"
+                android:thumb="@drawable/seekbar"
+                android:progressTint="@color/colorAccent"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_distance_5km_500km"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
+            <TextView
+                android:id="@+id/distance_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:text="250km"
+                android:gravity="center"/>
+
+            <SeekBar
+                android:id="@+id/distance_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="500"
+                android:min="5"
+                android:progress="245"
+                android:padding="16dp"
+                android:thumbTint="@color/colorAccent"
+                android:thumb="@drawable/seekbar"
+                android:progressTint="@color/colorAccent"
+                android:layout_marginTop="16dp"/>
+
+
+
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_a_category"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:outlineSpotShadowColor="@color/white"
+                    android:outlineAmbientShadowColor="@color/white">
+
+                    <RadioButton
+                        android:id="@+id/radioButton1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Restaurants"
+                        android:textSize="18sp"
+                        android:textColor="#FFFFFF"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/radioButton2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hotels"
+                        android:textSize="18sp"
+                        android:textColor="#FFFFFF"/>
+                    <RadioButton
+                        android:id="@+id/radioButton3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Attractions"
+                        android:textSize="18sp"
+                        android:textColor="#FFFFFF"/>
+
+                </RadioGroup>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:orientation="vertical">
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+</LinearLayout>
 
 
 
@@ -111,4 +283,4 @@
 
 </LinearLayout>
 </ScrollView>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</FrameLayout>

@@ -1,27 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginRight="10dp"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardBackgroundColor="@android:color/transparent"
+    card_view:cardElevation="0dp"
+    android:elevation="5dp"
+    android:clickable="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="4"
+        android:id="@+id/card"
+        android:background="@drawable/bg_item">
+    <!--<ImageView
+        android:layout_width="0dp"
+        android:layout_weight="1.2"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:id="@+id/res_image"
+        android:src="@drawable/logo"/>-->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1.2">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+            <TextView
+                android:id="@+id/ratingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                android:text="Rating  "
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:src="@android:drawable/btn_star_big_on" />
+            </LinearLayout>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/element_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:layout_marginStart="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:src="@drawable/back">
+
+        </de.hdodenhof.circleimageview.CircleImageView>
+        </LinearLayout>
+<LinearLayout
+    android:layout_weight="2.8"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <TextView
         android:id="@+id/nameTextView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_margin="30dp"
+        android:layout_margin="5dp"
         android:textSize="30dp"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:text="Element Name :"/>
+
+
+        <TextView
+            android:id="@+id/addressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+
+            android:text="Address"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold">
+
+        </TextView>
+
+
+
+
+
     <TextView
         android:id="@+id/latitudeTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+android:text="Latitude :"
         android:textSize="15dp"
         android:textColor="@color/white"/>
     <TextView
         android:id="@+id/longitudeTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:text="Longitude :"
         android:textSize="15dp"
         android:textColor="@color/white"/>
 </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

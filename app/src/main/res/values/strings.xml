@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">My Guide</string>
     <string name="app_header">My guide App</string>
+    <string name="destination">Destination</string>
+    <string name="error_msg_city">City Name is required to search manually</string>
+    <string name="error_msg_local">Location is disabled, please activate it to search for city!!!</string>
+    <string name="error_msg_cnx">There is no connection, please activate it !!!</string>
+    <string name="error_msg_tap">Please try another city !!!</string>
+    <string name="location">My location</string>
+    <string name="search_nearby">Search NearBy</string>
+    <string name="more_options">More options</string>
+    <string name="hide_options">Hide options</string>
+    <string name="select_integer_limit_3_30">Select integer limit (3-30)</string>
+    <string name="select_distance_5km_500km">Select distance (5km-500km)</string>
+    <string name="select_a_category">Select a category:</string>
 </resources>

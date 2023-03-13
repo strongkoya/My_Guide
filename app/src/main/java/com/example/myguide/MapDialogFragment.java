@@ -3,19 +3,25 @@ package com.example.myguide;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.microsoft.maps.Geopoint;
 import com.microsoft.maps.MapAnimationKind;
 import com.microsoft.maps.MapElementLayer;
@@ -30,6 +36,7 @@ import java.util.Locale;
 public class MapDialogFragment extends DialogFragment {
 
     private MapView mMapView;
+    private FloatingActionButton mFab;
     private MapElementLayer mPinLayer;
     private MapImage mPinImage;
     private int mUntitledPushpinCount = 0;
@@ -50,40 +57,152 @@ public class MapDialogFragment extends DialogFragment {
 
         // Set the map scene to show both locations
         Bundle args = getArguments();
-        ParcelableGeopoint parcelableRestaurantLocation = args.getParcelable("restaurantLocation");
-        double restaurantLatitude = parcelableRestaurantLocation.getLatitude();
-        double restaurantLongitude = parcelableRestaurantLocation.getLongitude();
-        Geopoint restaurantLocation = new Geopoint(restaurantLatitude, restaurantLongitude);
+        ParcelableGeopoint parcelableElementLocation = args.getParcelable("elementLocation");
+        double elementLatitude = parcelableElementLocation.getLatitude();
+        double elementLongitude = parcelableElementLocation.getLongitude();
+        Geopoint elementLocation = new Geopoint(elementLatitude, elementLongitude);
 
         ParcelableGeopoint parcelableMyLocation = args.getParcelable("myLocation");
         double myLatitude = parcelableMyLocation.getLatitude();
         double myLongitude = parcelableMyLocation.getLongitude();
         Geopoint myLocation = new Geopoint(myLatitude, myLongitude);
         mMapView.setScene(
-                MapScene.createFromLocationAndZoomLevel(restaurantLocation, 15),
+                MapScene.createFromLocationAndZoomLevel(elementLocation, 15),
                 MapAnimationKind.NONE);
 
         // Add pins for both locations
         mPinLayer = new MapElementLayer();
         mMapView.getLayers().add(mPinLayer);
         mPinImage = getPinImage();
-        addPin(restaurantLocation, "Restaurant");
+        addPin(elementLocation, "Restaurant");
         addPin(myLocation, "My location");
+       /* // Add a floating action button for directions
+        FloatingActionButton fab = new FloatingActionButton(requireContext());
+        fab.setImageResource(android.R.drawable.ic_dialog_map);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open Google Maps with directions from current location to element location
+                Bundle args = getArguments();
+                ParcelableGeopoint parcelableElementLocation = args.getParcelable("elementLocation");
+                double elementLatitude = parcelableElementLocation.getLatitude();
+                double elementLongitude = parcelableElementLocation.getLongitude();
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + elementLatitude + "," + elementLongitude);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+            }
+        });
+        if(mMapView.getParent() != null) {
+            ((FrameLayout)mMapView.getParent()).addView(fab);
+        }*/
+        // Create FloatingActionButton
+       /* mFab = new FloatingActionButton(requireContext());
+        mFab.setImageResource(android.R.drawable.ic_dialog_map);
+        mFab.setSize(FloatingActionButton.SIZE_AUTO);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Do something when the button is clicked
+                // For example, show user's location on the map
+            }
+        });
+*/
+       /* FloatingActionButton fabDirections = getView().findViewById(R.id.fab_directions);
+        fabDirections.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open Google Maps with directions from current location to element location
+                Bundle args = getArguments();
+                ParcelableGeopoint parcelableElementLocation = args.getParcelable("elementLocation");
+                double elementLatitude = parcelableElementLocation.getLatitude();
+                double elementLongitude = parcelableElementLocation.getLongitude();
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + elementLatitude + "," + elementLongitude);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+            }
+        });*/
+
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Create a dialog with the map view
+        /*// Create a dialog with the map view
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(mMapView)
-                .setTitle("Map")
-                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dismiss();
-                    }
-                });
+        builder.setView(mMapView);
+        builder.setPositiveButton(null, null);
+        builder.setNegativeButton(null, null);
+        builder.setTitle(null);
+        return builder.create();*/
+        // Créer une instance de la vue du fragment
+        View fragmentView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_map_dialog, null);
+        mMapView = fragmentView.findViewById(R.id.map_view);
+        mMapView.setCredentialsKey(MY_API_KEY);
+        mMapView.onCreate(savedInstanceState);
+        // Set the map scene to show both locations
+        Bundle args = getArguments();
+        ParcelableGeopoint parcelableElementLocation = args.getParcelable("elementLocation");
+        double elementLatitude = parcelableElementLocation.getLatitude();
+        double elementLongitude = parcelableElementLocation.getLongitude();
+        Geopoint elementLocation = new Geopoint(elementLatitude, elementLongitude);
+
+        ParcelableGeopoint parcelableMyLocation = args.getParcelable("myLocation");
+        double myLatitude = parcelableMyLocation.getLatitude();
+        double myLongitude = parcelableMyLocation.getLongitude();
+        Geopoint myLocation = new Geopoint(myLatitude, myLongitude);
+        mMapView.setScene(
+                MapScene.createFromLocationAndZoomLevel(elementLocation, 15),
+                MapAnimationKind.NONE);
+
+        // Add pins for both locations
+        mPinLayer = new MapElementLayer();
+        mMapView.getLayers().add(mPinLayer);
+        mPinImage = getPinImage();
+        addPin(elementLocation, getString(R.string.destination));
+        addPin(myLocation, getString(R.string.location));
+       // FloatingActionButton fabDirections = fragmentView.findViewById(R.id.fab_directions);
+        ImageButton btnDirections = fragmentView.findViewById(R.id.btn_directions);
+        btnDirections.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Open Google Maps with directions from current location to element location
+
+                Bundle args = getArguments();
+                ParcelableGeopoint parcelableElementLocation = args.getParcelable("elementLocation");
+                double elementLatitude = parcelableElementLocation.getLatitude();
+                //Toast.makeText(getContext(),elementLatitude+" lat",Toast.LENGTH_LONG).show();
+                double elementLongitude = parcelableElementLocation.getLongitude();
+                ParcelableGeopoint parcelableMyLocation = args.getParcelable("myLocation");
+                double myLatitude = parcelableMyLocation.getLatitude();
+                double myLongitude = parcelableMyLocation.getLongitude();
+                /*Uri gmmIntentUri = Uri.parse("google.navigation:q=" + elementLatitude + "," + elementLongitude);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }*/
+
+
+
+                String uri = "http://maps.google.com/maps?saddr=" + myLatitude + "," + myLongitude + "&daddr=" + elementLatitude + "," + elementLongitude;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                intent.setPackage("com.google.android.apps.maps");
+                startActivity(intent);
+
+            }
+        });
+        // Créer une nouvelle AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(fragmentView);
+        builder.setPositiveButton(null, null);
+        builder.setNegativeButton(null, null);
+        builder.setTitle(null);
         return builder.create();
     }
 
@@ -117,4 +236,5 @@ public class MapDialogFragment extends DialogFragment {
         }
         mPinLayer.getElements().add(pushpin);
     }
+
 }

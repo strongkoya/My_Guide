@@ -1,21 +1,8 @@
 package com.example.myguide;
 
 
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.Manifest;
-import android.app.AlertDialog;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -31,59 +18,49 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.microsoft.maps.Geopoint;
-import com.microsoft.maps.MapAnimationKind;
 import com.microsoft.maps.MapElementLayer;
 import com.microsoft.maps.MapIcon;
 import com.microsoft.maps.MapImage;
-import com.microsoft.maps.MapRenderMode;
-import com.microsoft.maps.MapScene;
-import com.microsoft.maps.MapTappedEventArgs;
 import com.microsoft.maps.MapView;
-import com.microsoft.maps.search.MapLocation;
-import com.microsoft.maps.search.MapLocationFinder;
-import com.microsoft.maps.search.MapLocationFinderResult;
-import com.microsoft.maps.search.MapLocationFinderStatus;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
-
 
 
 public class MainActivity extends AppCompatActivity {
@@ -102,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_PERMS = 1;
     public static final int ADDRESSES = 10;
 
+    String type = "restaurants";
+    String distance = "250",
+            limit = "10";
+    TextView distanceValue, limitValue;
     EditText editText;
     Button button, locate, forecast;
     ImageView imageView;
@@ -111,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ElementAdapter elementAdapter;
+    private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,22 +108,91 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         elementAdapter = new ElementAdapter(new ArrayList<>());
         recyclerView.setAdapter(elementAdapter);
+        distanceValue = findViewById(R.id.distance_value);
+        limitValue = findViewById(R.id.limit_value);
 
-     //   refresh();
+
+// Récupération des éléments de la vue
+        SeekBar distanceSeekBar = findViewById(R.id.distance_seekbar);
+        RadioGroup typeRadioGroup = findViewById(R.id.radioGroup);
+        RadioButton selectedRadioButton = findViewById(typeRadioGroup.getCheckedRadioButtonId());
+// Notez que getCheckedRadioButtonId() renvoie l'ID du RadioButton sélectionné dans le groupe de boutons radio.
+
+// Ajouter un écouteur pour le changement de la valeur de la SeekBar
+        distanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // La valeur a été modifiée, récupérer la nouvelle valeur
+                distance = Integer.toString(progress); // conversion de int à String
+                distanceValue.setText(distance + "km");
+                // Faire quelque chose avec la valeur (par exemple, la stocker dans une variable)
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Ne rien faire
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Ne rien faire
+            }
+        });
+
+// Ajouter un écouteur pour le changement de la sélection du bouton radio
+        typeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Le bouton radio sélectionné a été modifié, récupérer la nouvelle valeur
+                RadioButton selectedRadioButton = findViewById(checkedId);
+                type = selectedRadioButton.getText().toString().toLowerCase();
+                // Faire quelque chose avec la valeur (par exemple, la stocker dans une variable)
+            }
+        });
+
+
+// Récupération des éléments de la vue
+        SeekBar limiteSeekBar = findViewById(R.id.limit_seekbar);
+// Ajouter un écouteur pour le changement de la valeur de la SeekBar
+        limiteSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // La valeur a été modifiée, récupérer la nouvelle valeur
+                limit = Integer.toString(progress); // conversion de int à String
+                limitValue.setText(limit);
+                // Faire quelque chose avec la valeur (par exemple, la stocker dans une variable)
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Ne rien faire
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Ne rien faire
+            }
+        });
+
+
+        //   refresh();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if (TextUtils.isEmpty(editText.getText())) {
 
-                    editText.setError("City Name is required to search manually");
+                    editText.setError(getString(R.string.error_msg_city));
 
                 } else {
-                  String  city0 = editText.getText().toString();
-                //    FindWeather(city);
+                    String city0 = editText.getText().toString();
+                    //    FindWeather(city);
                     searchCityCoordinates(city0);
-                    FindNearBy(lat,lon);
-                    Toast.makeText(getApplicationContext(), lat+", "+lon,Toast.LENGTH_LONG).show();
+                    //  FindNearBy(lat,lon);
+                    //lat =42.331082;
+                    //     lon = -71.068133;
+                    // FindNearBy(42.331082,-71.068133);
+                    Toast.makeText(getApplicationContext(), lat + ", " + lon, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -189,19 +240,56 @@ public class MainActivity extends AppCompatActivity {
 
                     //located(location) affecte à city le nom de la cité via getAdminArea()
                     located(location);
-                  //  searchCityCoordinates("tuniss");
-                    FindNearBy(lat,lon);
-                   // FindNearBy(36.6482673,10.2941294);
+                    //  searchCityCoordinates("tuniss");
+                    FindNearBy(lat, lon);
+                    // FindNearBy(36.6482673,10.2941294);
 
 
-
-                    Toast.makeText(getApplicationContext(),city,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), city, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "La localisation est désactivée, veuillez l'activer ou bien chercher une autre ville!!!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.error_msg_local) , Toast.LENGTH_LONG).show();
 
                 }
             }
         });
+
+
+        // Récupération de la vue LinearLayout
+        LinearLayout optionsLayout = findViewById(R.id.options_layout);
+
+// Récupération du bouton "More options"
+        Button moreOptionsButton = findViewById(R.id.show_options_button);
+
+// Récupération du bouton "Hide"
+        Button hideButton = findViewById(R.id.hide_button);
+
+// Masquage de la vue LinearLayout au démarrage de l'activité
+        optionsLayout.setVisibility(View.GONE);
+
+// Définition de l'action lorsque l'utilisateur appuie sur le bouton "More options"
+        moreOptionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Affichage de la vue LinearLayout
+                optionsLayout.setVisibility(View.VISIBLE);
+                // Affichage du bouton "Hide"
+                hideButton.setVisibility(View.VISIBLE);
+                moreOptionsButton.setVisibility(View.GONE);
+            }
+        });
+
+// Définition de l'action lorsque l'utilisateur appuie sur le bouton "Hide"
+        hideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Masquage de la vue LinearLayout
+                optionsLayout.setVisibility(View.GONE);
+                // Masquage du bouton "Hide"
+                hideButton.setVisibility(View.GONE);
+                moreOptionsButton.setVisibility(View.VISIBLE);
+            }
+        });
+
 
        /* forecast.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        /*SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -220,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                 // Par exemple, vous pouvez appeler une fonction pour rafraîchir les données
                 refreshDataAfterSwipe();
             }
-        });
+        });*/
 
     }
 
@@ -239,16 +327,29 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     public void FindNearBy(double latitude, double longitude) {
-        if(lat==0&&lon==0){
 
-        }  else  {
+        if (lat == 0 && lon == 0) {
 
-        OkHttpClient client = new OkHttpClient();
+        } else {
+            // Vider la liste d'éléments de l'adaptateur
+            elementAdapter.getElementList().clear();
+
+            progress = (ProgressBar) findViewById(R.id.progress);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                progress.setVisibility(View.VISIBLE);
+                progress.setProgress(0, true);
 
 
-        String url = "https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng?latitude="+latitude+"&longitude="+longitude+"&limit=20&currency=USD&distance=50&open_now=false&lunit=km&lang=en_U";
+                //elementAdapter.setElementList(null);
+            } else progress.setProgress(0);
 
 
+            OkHttpClient client = new OkHttpClient();
+
+
+            String url = "https://travel-advisor.p.rapidapi.com/" + type + "/list-by-latlng?latitude=" + latitude + "&longitude=" + longitude + "&limit=" + limit + "&distance=" + distance + "&lunit=km";
+
+            Log.d("url : ", url);
         /*Request request = new Request.Builder()
                 .url(url)
                 .get()
@@ -256,72 +357,89 @@ public class MainActivity extends AppCompatActivity {
                 .addHeader("X-RapidAPI-Key", "9a8a6b8942msh7862e75a384b437p113bfajsn9368eb03cb21")
                 .build();*/
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Code pour traiter la réponse JSON
-                        try {
-                            //find temperature
-                            JSONObject jsonObject = new JSONObject(response);
-                            JSONArray data=jsonObject.getJSONArray("data");
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Code pour traiter la réponse JSON
+                            try {
+                                //find temperature
+                                JSONObject jsonObject = new JSONObject(response);
+                                JSONArray data = jsonObject.getJSONArray("data");
 
-                            // Créer une liste de restaurants
-                            List<Element> elementList = new ArrayList<>();
+                                // Créer une liste de restaurants
+                                List<Element> elementList = new ArrayList<>();
+                                progress.setVisibility(View.GONE);
+                                int len = data.length();
+//                            Toast.makeText(getApplicationContext(), data.getJSONObject(0).getString("name").toString(), Toast.LENGTH_LONG).show();
+                                for (int i = 0; i < len; i++) {
+                                    JSONObject elementSeeked = data.getJSONObject(i);
 
-                            int len=data.length();
-                            Toast.makeText(getApplicationContext(), data.getJSONObject(0).getString("name").toString(), Toast.LENGTH_LONG).show();
-                            for (int i = 0; i < len; i++) {
-                                JSONObject restaurant = data.getJSONObject(i);
+                                    if (elementSeeked.has("name")) {
+                                        // Le JSON contient une clé "name"
+                                        String rating = "No rating";
 
-                                if (restaurant.has("name")) {
-                                    // Le JSON contient une clé "name"
+                                        if (elementSeeked.has("rating")) {
+                                            rating = elementSeeked.getString("rating");
+                                        }
+                                        String urlImage = "";
+                                        if (elementSeeked.has("photo")) {
+                                            JSONObject jsonPhoto = elementSeeked.getJSONObject("photo");
+                                            JSONObject jsonImages = jsonPhoto.getJSONObject("images");
+                                            JSONObject jsonLarge = jsonImages.getJSONObject("large");
+                                            urlImage = jsonLarge.getString("url");
+
+                                        }
+                                        String address = "";
+                                        if (elementSeeked.has("address")) {
+                                            address = elementSeeked.getString("address");
+                                        }
 
 
-                                String name = restaurant.getString("name");
-                                    double lt = restaurant.getDouble("latitude");
-                                    double lg = restaurant.getDouble("longitude");
+                                        String name = elementSeeked.getString("name");
+                                        double lt = elementSeeked.getDouble("latitude");
+                                        double lg = elementSeeked.getDouble("longitude");
 
-                                Element element = new Element(name,lt,lg);
+                                        Element element = new Element(name, lt, lg, rating, address, urlImage);
 
                                 /*String address = restaurant.getString("address");
                                 String cuisine = restaurant.getString("cuisine");
                                 String phone = restaurant.getString("phone");
                                 String website = restaurant.getString("website");*/
-                                // Ajoutez le code pour stocker les détails des restaurants dans une liste ou une autre structure de données appropriée.
+                                        // Ajoutez le code pour stocker les détails des restaurants dans une liste ou une autre structure de données appropriée.
 
-                                elementList.add(element);
-                                } else {
-                                    // Le JSON ne contient pas de clé "name"
+                                        elementList.add(element);
+                                    } else {
+                                        // Le JSON ne contient pas de clé "name"
+                                    }
                                 }
-                            }
 
-                            int s = elementList.size();
-                            Toast.makeText(getApplicationContext(),"  "+s, Toast.LENGTH_LONG).show();
+                                int s = elementList.size();
+                                Toast.makeText(getApplicationContext(), "  " + s, Toast.LENGTH_LONG).show();
 
-                            // Mettre à jour l'adaptateur du RecyclerView
-                            elementAdapter.setElementList(elementList);
-                            int a = elementAdapter.getItemCount();
-                            Toast.makeText(getApplicationContext(),"    :"+a, Toast.LENGTH_LONG).show();
-                            elementAdapter.notifyDataSetChanged();
+                                // Mettre à jour l'adaptateur du RecyclerView
+                                elementAdapter.setElementList(elementList);
+                                int a = elementAdapter.getItemCount();
+                                Toast.makeText(getApplicationContext(), "    :" + a, Toast.LENGTH_LONG).show();
+                                elementAdapter.notifyDataSetChanged();
 
-                            elementAdapter.setOnItemClickListener(new OnItemClickListener() {
-                                @Override
-                                public void onItemClick(Element element) {
-                                    Toast.makeText(getApplicationContext(),"youe have clicked !!!!!"+element.getLongitude(), Toast.LENGTH_LONG).show();
+                                elementAdapter.setOnItemClickListener(new OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(Element element) {
+                                      //  Toast.makeText(getApplicationContext(), "youe have clicked !!!!!" + element.getLongitude(), Toast.LENGTH_LONG).show();
 
 
-                                    // Handle positive button click here
-                                    ParcelableGeopoint restaurantLocation = new ParcelableGeopoint(element.getLatitude(), element.getLongitude());
-                                    ParcelableGeopoint myLocation = new ParcelableGeopoint(lat, lon);
+                                        // Handle positive button click here
+                                        ParcelableGeopoint elementLocation = new ParcelableGeopoint(element.getLatitude(), element.getLongitude());
+                                        ParcelableGeopoint myLocation = new ParcelableGeopoint(lat, lon);
 
-                                    MapDialogFragment mapDialog = new MapDialogFragment();
-                                    Bundle args = new Bundle();
-                                    args.putParcelable("restaurantLocation", restaurantLocation);
-                                    args.putParcelable("myLocation", myLocation);
-                                    mapDialog.setArguments(args);
+                                        MapDialogFragment mapDialog = new MapDialogFragment();
+                                        Bundle args = new Bundle();
+                                        args.putParcelable("elementLocation", elementLocation);
+                                        args.putParcelable("myLocation", myLocation);
+                                        mapDialog.setArguments(args);
 
-                                    mapDialog.show(getSupportFragmentManager(), "map_dialog");
+                                        mapDialog.show(getSupportFragmentManager(), "map_dialog");
 
 
                                     /*AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -349,8 +467,8 @@ public class MainActivity extends AppCompatActivity {
                                             });
                                     AlertDialog dialog = builder.create();
                                     dialog.show();*/
-                                }
-                            });
+                                    }
+                                });
 
 
 
@@ -377,49 +495,50 @@ public class MainActivity extends AppCompatActivity {
                             Picasso.get().load("http://openweathermap.org/img/wn/" + icon + "@2x.png").into(imageView);*/
 
 
+                            } catch (JSONException e) {
 
-                        } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-                            e.printStackTrace();
                         }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Code pour gérer les erreurs de requête
 
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Code pour gérer les erreurs de requête
-
-                        if (!isNetworkAvailable(getApplicationContext())) {
-                            Toast.makeText(getApplicationContext(), "Il n'y a pas de connexion, veuillez l'activer!!!", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Essayez une autre ville !!!", Toast.LENGTH_LONG).show();
+                            if (!isNetworkAvailable(getApplicationContext())) {
+                                Toast.makeText(getApplicationContext(), getString(R.string.error_msg_cnx), Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), getString(R.string.error_msg_tap), Toast.LENGTH_LONG).show();
+                            }
+                            // Toast.makeText(MainActivity.this,error.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
                         }
-                        // Toast.makeText(MainActivity.this,error.getLocalizedMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("X-RapidAPI-Host", "travel-advisor.p.rapidapi.com");
-                headers.put("X-RapidAPI-Key", "9a8a6b8942msh7862e75a384b437p113bfajsn9368eb03cb21");
-                return headers;
-            }
-        };
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("X-RapidAPI-Host", "travel-advisor.p.rapidapi.com");
+                    // headers.put("X-RapidAPI-Key", "9a8a6b8942msh7862e75a384b437p113bfajsn9368eb03cb21");
+                    headers.put("X-RapidAPI-Key", "016fa5cfbfmsh57370e6c5df1f30p1cdd22jsn969c05ef7a43");
+
+                    return headers;
+                }
+            };
 
 // Ajouter la requête à la file d'attente de Volley
 
 
-        RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        requestQueue.add(stringRequest);
+            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+            requestQueue.add(stringRequest);
 
-    }
+        }
     }
 
 
     private void located(Location location) {
-         lat = location.getLatitude();
-         lon = location.getLongitude();
+        lat = location.getLatitude();
+        lon = location.getLongitude();
 
         if (!Geocoder.isPresent()) {
             Toast.makeText(getApplicationContext(), "Les coordonnées sont indisponibles", Toast.LENGTH_LONG).show();
@@ -453,8 +572,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void searchCityCoordinates(String cityName) {
-       String url = "https://nominatim.openstreetmap.org/search?q=" + cityName + "&format=json";
-       // String url = "https://api.openweathermap.org/data/2.5/weather?q="+ cityName +"&appid=462f445106adc1d21494341838c10019&units=metric";
+        String url = "https://nominatim.openstreetmap.org/search?q=" + cityName + "&format=json";
+        // String url = "https://api.openweathermap.org/data/2.5/weather?q="+ cityName +"&appid=462f445106adc1d21494341838c10019&units=metric";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -464,7 +583,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 JSONArray responseArray = new JSONArray(response);
 
-                                if (responseArray.length()!=0) {
+                                if (responseArray.length() != 0) {
                                     JSONObject firstEntry = responseArray.getJSONObject(1);
                                     lat = Double.parseDouble(firstEntry.getString("lat"));
                                     lon = Double.parseDouble(firstEntry.getString("lon"));
@@ -481,7 +600,7 @@ public class MainActivity extends AppCompatActivity {
                                 JSONObject object = jsonObject.getJSONObject("coord");
                                 double lat = object.getDouble("lat");
                                 double lon = object.getDouble("lon");*/
-
+                                FindNearBy(lat, lon);
                                 Log.d("Latitude: " + lat, "Longitude: " + lon);
                                 Toast.makeText(getApplicationContext(), "lat de la ville rech :" + lat, Toast.LENGTH_LONG).show();
 
@@ -609,17 +728,18 @@ public class MainActivity extends AppCompatActivity {
             FindWeather(preferences.getString(MainActivity.WWPREF_CITY,""));
         }
     }*/
-    private void refreshDataAfterSwipe() {
+   /* private void refreshDataAfterSwipe() {
       //  refresh();
         // Indiquez que le SwipeRefreshLayout est terminé de se rafraîchir
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setRefreshing(false);
-    }
+    }*/
 
     public void updateUI(List<Element> elementList) {
         elementAdapter = new ElementAdapter(elementList);
         recyclerView.setAdapter(elementAdapter);
     }
+
     private MapImage getPinImage() {
         Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_pin, null);
 
@@ -634,65 +754,65 @@ public class MainActivity extends AppCompatActivity {
         return new MapImage(bitmap);
     }
 
-   /* private void setupDemoMenu() {
-        mDemoMenu = findViewById(R.id.menu_demo);
+    /* private void setupDemoMenu() {
+         mDemoMenu = findViewById(R.id.menu_demo);
 
-        FloatingActionButton buttonDemo = findViewById(R.id.button_demo);
-        buttonDemo.setCompatElevation(0);
-        buttonDemo.setOnClickListener((View v) -> {
-            boolean wasVisible = mDemoMenu.getVisibility() == View.VISIBLE;
-            mDemoMenu.setVisibility(wasVisible ? View.GONE : View.VISIBLE);
-        });
+         FloatingActionButton buttonDemo = findViewById(R.id.button_demo);
+         buttonDemo.setCompatElevation(0);
+         buttonDemo.setOnClickListener((View v) -> {
+             boolean wasVisible = mDemoMenu.getVisibility() == View.VISIBLE;
+             mDemoMenu.setVisibility(wasVisible ? View.GONE : View.VISIBLE);
+         });
 
-        mButtonPoiTap = findViewById(R.id.button_poi_tap);
-        mButtonPoiTap.setTag(false);
-        mButtonPoiTap.setOnClickListener((View v) -> {
-            boolean wasActive = (boolean) v.getTag();
-            v.setBackground(wasActive
-                    ? ResourcesCompat.getDrawable(v.getResources(), R.drawable.button_default, null)
-                    : ResourcesCompat.getDrawable(v.getResources(), R.drawable.button_active, null));
-            v.setTag(!wasActive);
-        });
-        mMapView.addOnMapTappedListener((MapTappedEventArgs e) -> {
-            if ((boolean) mButtonPoiTap.getTag()) {
-                Geopoint location = mMapView.getLocationFromOffset(e.position);
-                if (location != null) {
-                    MapLocationFinder.findLocationsAt(
-                            location,
-                            null,
-                            (MapLocationFinderResult result) -> {
-                                MapLocationFinderStatus status = result.getStatus();
+         mButtonPoiTap = findViewById(R.id.button_poi_tap);
+         mButtonPoiTap.setTag(false);
+         mButtonPoiTap.setOnClickListener((View v) -> {
+             boolean wasActive = (boolean) v.getTag();
+             v.setBackground(wasActive
+                     ? ResourcesCompat.getDrawable(v.getResources(), R.drawable.button_default, null)
+                     : ResourcesCompat.getDrawable(v.getResources(), R.drawable.button_active, null));
+             v.setTag(!wasActive);
+         });
+         mMapView.addOnMapTappedListener((MapTappedEventArgs e) -> {
+             if ((boolean) mButtonPoiTap.getTag()) {
+                 Geopoint location = mMapView.getLocationFromOffset(e.position);
+                 if (location != null) {
+                     MapLocationFinder.findLocationsAt(
+                             location,
+                             null,
+                             (MapLocationFinderResult result) -> {
+                                 MapLocationFinderStatus status = result.getStatus();
 
-                                if (status == MapLocationFinderStatus.SUCCESS) {
+                                 if (status == MapLocationFinderStatus.SUCCESS) {
 
-                                    MapLocation resultLocation = result.getLocations().get(0);
-                                    Geopoint pinLocation = new Geopoint(
-                                            location.getPosition().getLatitude(),
-                                            location.getPosition().getLongitude(),
-                                            0);
-                                    String pinTitle = String.format(
-                                            Locale.ROOT,
-                                            "%s (%s)",
-                                            resultLocation.getDisplayName(),
-                                            resultLocation.getEntityType());
+                                     MapLocation resultLocation = result.getLocations().get(0);
+                                     Geopoint pinLocation = new Geopoint(
+                                             location.getPosition().getLatitude(),
+                                             location.getPosition().getLongitude(),
+                                             0);
+                                     String pinTitle = String.format(
+                                             Locale.ROOT,
+                                             "%s (%s)",
+                                             resultLocation.getDisplayName(),
+                                             resultLocation.getEntityType());
 
-                                    addPin(pinLocation, pinTitle);
+                                     addPin(pinLocation, pinTitle);
 
-                                } else if (status == MapLocationFinderStatus.EMPTY_RESPONSE) {
-                                    Toast.makeText(MainActivity.this, "Unable to reverse geocode this location", Toast.LENGTH_LONG).show();
+                                 } else if (status == MapLocationFinderStatus.EMPTY_RESPONSE) {
+                                     Toast.makeText(MainActivity.this, "Unable to reverse geocode this location", Toast.LENGTH_LONG).show();
 
-                                } else {
-                                    Toast.makeText(MainActivity.this, "Error processing the request", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                }
-            }
-            return false;
-        });
+                                 } else {
+                                     Toast.makeText(MainActivity.this, "Error processing the request", Toast.LENGTH_LONG).show();
+                                 }
+                             });
+                 }
+             }
+             return false;
+         });
 
-        findViewById(R.id.button_poi_search).setOnClickListener((View v) -> showGeocodeDialog());
-        findViewById(R.id.button_poi_clear).setOnClickListener((View v) -> clearPins());
-    }*/
+         findViewById(R.id.button_poi_search).setOnClickListener((View v) -> showGeocodeDialog());
+         findViewById(R.id.button_poi_clear).setOnClickListener((View v) -> clearPins());
+     }*/
     private void addPin(Geopoint location, String title) {
         MapIcon pushpin = new MapIcon();
         pushpin.setLocation(location);
