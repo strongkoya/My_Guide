@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">دليلي</string>
+    <string name="app_header">تطبيق دليلي</string>
+    <string name="destination">المكان المقصود</string>
+    <string name="error_msg_city">اسم المدينة ضروري للبحث يدويا</string>
+    <string name="error_msg_local">خاصية تحديد الموقع معطل ، يرجى تفعيله للبحث عن المدينة !!!</string>
+    <string name="error_msg_cnx">لا يوجد اتصال مع الشبكة ، يرجى تفعيله !!!</string>
+    <string name="error_msg_tap">من فضلك جرب مدينة أخرى !!!</string>
+    <string name="location">موقعي</string>
+    <string name="search_nearby">البحث في الأماكن القريبة</string>
+    <string name="more_options">المزيد من الخيارات</string>
+    <string name="hide_options">إخفاء الخيارات</string>
+    <string name="select_integer_limit_3_30">حدد عدد صحيح (3-30)</string>
+    <string name="select_distance_5km_500km">حدد المسافة (5 كم - 500 كم)</string>
+    <string name="select_a_category">اختر تصنيف:</string>
+    <string name="enter_city_name">أدخل اسم المدينة</string>
+</resources>

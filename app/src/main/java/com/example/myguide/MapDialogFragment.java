@@ -76,57 +76,7 @@ public class MapDialogFragment extends DialogFragment {
         mPinImage = getPinImage();
         addPin(elementLocation, "Restaurant");
         addPin(myLocation, "My location");
-       /* // Add a floating action button for directions
-        FloatingActionButton fab = new FloatingActionButton(requireContext());
-        fab.setImageResource(android.R.drawable.ic_dialog_map);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Open Google Maps with directions from current location to element location
-                Bundle args = getArguments();
-                ParcelableGeopoint parcelableElementLocation = args.getParcelable("elementLocation");
-                double elementLatitude = parcelableElementLocation.getLatitude();
-                double elementLongitude = parcelableElementLocation.getLongitude();
-                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + elementLatitude + "," + elementLongitude);
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(mapIntent);
-                }
-            }
-        });
-        if(mMapView.getParent() != null) {
-            ((FrameLayout)mMapView.getParent()).addView(fab);
-        }*/
-        // Create FloatingActionButton
-       /* mFab = new FloatingActionButton(requireContext());
-        mFab.setImageResource(android.R.drawable.ic_dialog_map);
-        mFab.setSize(FloatingActionButton.SIZE_AUTO);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Do something when the button is clicked
-                // For example, show user's location on the map
-            }
-        });
-*/
-       /* FloatingActionButton fabDirections = getView().findViewById(R.id.fab_directions);
-        fabDirections.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Open Google Maps with directions from current location to element location
-                Bundle args = getArguments();
-                ParcelableGeopoint parcelableElementLocation = args.getParcelable("elementLocation");
-                double elementLatitude = parcelableElementLocation.getLatitude();
-                double elementLongitude = parcelableElementLocation.getLongitude();
-                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + elementLatitude + "," + elementLongitude);
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivity(mapIntent);
-                }
-            }
-        });*/
+
 
     }
 
@@ -140,6 +90,7 @@ public class MapDialogFragment extends DialogFragment {
         builder.setNegativeButton(null, null);
         builder.setTitle(null);
         return builder.create();*/
+
         // Créer une instance de la vue du fragment
         View fragmentView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_map_dialog, null);
         mMapView = fragmentView.findViewById(R.id.map_view);
@@ -227,6 +178,7 @@ public class MapDialogFragment extends DialogFragment {
         pushpin.setLocation(location);
         pushpin.setTitle(title);
         pushpin.setImage(mPinImage);
+
         pushpin.setNormalizedAnchorPoint(new PointF(0.5f, 1f));
         if (title.isEmpty()) {
             pushpin.setContentDescription(String.format(
