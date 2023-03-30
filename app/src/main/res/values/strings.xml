@@ -14,4 +14,8 @@
     <string name="select_distance_5km_500km">Select distance (5km-500km)</string>
     <string name="select_a_category">Select a category:</string>
     <string name="enter_city_name">Enter City Name</string>
+    <string name="search_text">Start searching</string>
+    <string name="none">No filter</string>
+    <string name="name">Filter by name</string>
+    <string name="rating">Filter by rating</string>
 </resources>

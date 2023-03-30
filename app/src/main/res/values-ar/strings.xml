@@ -15,4 +15,8 @@
     <string name="select_distance_5km_500km">حدد المسافة (5 كم - 500 كم)</string>
     <string name="select_a_category">اختر تصنيف:</string>
     <string name="enter_city_name">أدخل اسم المدينة</string>
+    <string name="search_text"> للبحث عن مزيد الخيارات </string>
+    <string name="none">لا يوجد مرشح</string>
+    <string name="name">حسب الاسم</string>
+    <string name="rating">حسب التصنيف</string>
 </resources>

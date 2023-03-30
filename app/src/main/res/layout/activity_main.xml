@@ -256,7 +256,41 @@
             </LinearLayout>
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:layout_margin="15dp">
 
+            <EditText
+                android:id="@+id/searchEt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="80"
+                android:background="@drawable/gray_rounded_shape"
+                android:drawableLeft="@drawable/ic_search_gray_24dp"
+                android:drawablePadding="8dp"
+                android:hint="@string/search_text"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/colorGray02" />
+
+            <ImageView
+                android:id="@+id/filtreBtn"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_weight="20"
+                android:src="@drawable/filter"
+                android:clickable="true"/>
+            <!--<Spinner
+                android:id="@+id/filters_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>-->
+
+        </LinearLayout>
     </LinearLayout>
 <LinearLayout
     android:layout_width="match_parent"

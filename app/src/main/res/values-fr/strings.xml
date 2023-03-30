@@ -15,4 +15,8 @@
     <string name="select_distance_5km_500km">Selectionner une distance (5km-500km)</string>
     <string name="select_a_category">Selectionner une categorie:</string>
     <string name="enter_city_name">Saisissez une ville</string>
+    <string name="search_text">Commencez à chercher</string>
+    <string name="none">Sans filtre</string>
+    <string name="name">Filtrer par nom</string>
+    <string name="rating">Filtrer par note</string>
 </resources>

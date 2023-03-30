@@ -18,17 +18,24 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +62,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -93,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ElementAdapter elementAdapter;
     private ProgressBar progress;
+    private ArrayList<Element> fullElemntAdapter;
+    private PopupMenu popupMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -310,6 +320,109 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        EditText searchEt = findViewById(R.id.searchEt);
+        ImageView filtreBtn = findViewById(R.id.filtreBtn);
+
+
+        // Ajouter le TextWatcher
+        searchEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Mettre à jour les éléments de RecyclerView en fonction de la recherche
+                //recyclerViewAdapter.getFilter().filter(s.toString());
+                if (elementAdapter != null&&fullElemntAdapter!=null) {
+                    elementAdapter.filter(s.toString(),fullElemntAdapter);
+                }
+                //  Toast.makeText(getContext(),s.toString(),Toast.LENGTH_SHORT).show();
+                //  Log.d("EditText :     ",s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+
+
+
+        /*List<String> filterOptions = Arrays.asList("None", "Name","Rating");
+        Spinner filtersSpinner = findViewById(R.id.filters_spinner);
+        ArrayAdapter<String> filtersAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, filterOptions);
+        filtersSpinner.setAdapter(filtersAdapter);
+        filtersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedFilter = filterOptions.get(position);
+                Toast.makeText(getApplicationContext(),selectedFilter,Toast.LENGTH_SHORT).show();
+                if (elementAdapter != null&&fullElemntAdapter!=null) {
+                    elementAdapter.sortData(selectedFilter,fullElemntAdapter);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });*/
+        popupMenu = new PopupMenu(MainActivity.this, filtreBtn);
+        popupMenu.getMenu().add(1,1,1,R.string.none);
+        popupMenu.getMenu().add(1,1,2,R.string.name);
+        popupMenu.getMenu().add(1,1,3,R.string.rating);
+
+        filtreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+                popupMenu.show();
+            }
+        });
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                String item = menuItem.getTitle().toString();
+                int order = menuItem.getOrder();
+                switch (order) {
+                    case 1:
+                        // effectuer l'action pour supprimer le filtre
+                        if (elementAdapter != null&&fullElemntAdapter!=null) {
+                            elementAdapter.sortData("none",fullElemntAdapter);
+                            searchEt.setText("");
+                        }
+                        break;
+                    case 2:
+                        // effectuer l'action pour filtrer par nom
+                        if (elementAdapter != null&&fullElemntAdapter!=null) {
+                            elementAdapter.sortData("name",fullElemntAdapter);
+                        }
+                        break;
+                    case 3:
+                        // effectuer l'action pour filtrer par note
+                        if (elementAdapter != null&&fullElemntAdapter!=null) {
+                            elementAdapter.sortData("rating",fullElemntAdapter);
+                        }
+                        break;
+
+                }
+                return true;
+            }
+        });
+
+        /*filtreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (filtersSpinner.getVisibility() == View.VISIBLE) {
+                    filtersSpinner.setVisibility(View.GONE);
+                } else {
+                    filtersSpinner.setVisibility(View.VISIBLE);
+                }
+            }
+        });*/
     }
 
 
@@ -419,6 +532,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 // Mettre à jour l'adaptateur du RecyclerView
                                 elementAdapter.setElementList(elementList);
+                                fullElemntAdapter = new ArrayList<>(elementAdapter.getElementList());
                                 int a = elementAdapter.getItemCount();
                                 Toast.makeText(getApplicationContext(), "    :" + a, Toast.LENGTH_LONG).show();
                                 elementAdapter.notifyDataSetChanged();

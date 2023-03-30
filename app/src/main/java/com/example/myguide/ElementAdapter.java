@@ -5,20 +5,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ElementAdapter extends RecyclerView.Adapter<ElementAdapter.ElementViewHolder> {
+    private final List<Element> listFull;
     private List<Element> ElementList;
     private OnItemClickListener mOnItemClickListener;
 
     public ElementAdapter(List<Element> ElementList) {
         this.ElementList = ElementList;
+           listFull=new ArrayList<>(ElementList);
     }
 
     @NonNull
@@ -83,4 +89,53 @@ public class ElementAdapter extends RecyclerView.Adapter<ElementAdapter.ElementV
     public void setOnItemClickListener(OnItemClickListener listener) {
         mOnItemClickListener = listener;
     }
+    public void filter(String text,ArrayList<Element> fullElemntAdapter) {
+        List<Element> filteredList = new ArrayList<>();
+
+        if (text.isEmpty()) {
+            filteredList.addAll(fullElemntAdapter);
+        } else {
+            String searchText = text.toLowerCase();
+
+            for (Element element : fullElemntAdapter) {
+                if (element.getName().toLowerCase().contains(searchText) || element.getAddress().toLowerCase().contains(searchText)
+                        || element.getRating().toLowerCase().contains(searchText) || Double.toString(element.getLatitude()).toLowerCase().contains(searchText)
+                        || Double.toString(element.getLongitude()).toLowerCase().contains(searchText)) {
+                    filteredList.add(element);
+                }
+            }
+        }
+        ElementList.clear();
+        ElementList.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
+    public void sortData(String sortBy,ArrayList<Element> fullElemntAdapter) {
+        switch (sortBy.toLowerCase()) {
+            case "name":
+                Collections.sort(ElementList, new Comparator<Element>() {
+                    @Override
+                    public int compare(Element o1, Element o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+                break;
+            case "rating":
+                Collections.sort(ElementList, new Comparator<Element>() {
+                    @Override
+                    public int compare(Element o1, Element o2) {
+                        return o2.getRating().compareTo(o1.getRating());
+                    }
+                });
+                break;
+            case "none":
+                ElementList.clear();
+                ElementList.addAll(fullElemntAdapter);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid sortBy argument: " + sortBy);
+        }
+        notifyDataSetChanged();
+    }
+
 }
