@@ -301,24 +301,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-       /* forecast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WeatherDialogFragment dialogFragment = new WeatherDialogFragment();
-                dialogFragment.show(getSupportFragmentManager(), "weather_fragment_tag");
-
-            }
-        });*/
-
-        /*SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Code à exécuter lorsqu'un swipe est détecté
-                // Par exemple, vous pouvez appeler une fonction pour rafraîchir les données
-                refreshDataAfterSwipe();
-            }
-        });*/
 
         EditText searchEt = findViewById(R.id.searchEt);
         ImageView filtreBtn = findViewById(R.id.filtreBtn);
@@ -348,26 +330,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-        /*List<String> filterOptions = Arrays.asList("None", "Name","Rating");
-        Spinner filtersSpinner = findViewById(R.id.filters_spinner);
-        ArrayAdapter<String> filtersAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, filterOptions);
-        filtersSpinner.setAdapter(filtersAdapter);
-        filtersSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedFilter = filterOptions.get(position);
-                Toast.makeText(getApplicationContext(),selectedFilter,Toast.LENGTH_SHORT).show();
-                if (elementAdapter != null&&fullElemntAdapter!=null) {
-                    elementAdapter.sortData(selectedFilter,fullElemntAdapter);
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });*/
         popupMenu = new PopupMenu(MainActivity.this, filtreBtn);
         popupMenu.getMenu().add(1,1,1,R.string.none);
         popupMenu.getMenu().add(1,1,2,R.string.name);
@@ -413,31 +375,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*filtreBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (filtersSpinner.getVisibility() == View.VISIBLE) {
-                    filtersSpinner.setVisibility(View.GONE);
-                } else {
-                    filtersSpinner.setVisibility(View.VISIBLE);
-                }
-            }
-        });*/
+
     }
 
 
-
-   /* @Override
-    protected void onStart() {
-        super.onStart();
-        getPref();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getPref();
-    }*/
 
     public void FindNearBy(double latitude, double longitude) {
 
@@ -556,58 +497,9 @@ public class MainActivity extends AppCompatActivity {
                                         mapDialog.show(getSupportFragmentManager(), "map_dialog");
 
 
-                                    /*AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                                    builder.setTitle("Restaurant information")
-                                            .setMessage("Do you want to see this restaurant on the map?")
-                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    // Handle positive button click here
 
-
-                                                    Geopoint restaurantLocation = new Geopoint(element.getLatitude(),element.getLongitude());
-                                                    Geopoint myLocation = new Geopoint(lat, lon);
-                                                    mMapView.setScene(
-                                                            MapScene.createFromLocationAndZoomLevel(restaurantLocation, 15),
-                                                            MapAnimationKind.NONE);
-
-                                                    addPin(restaurantLocation, "Restaurant");
-                                                    addPin(myLocation, "My location");
-                                                }
-                                            })
-                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    // Handle negative button click here
-                                                }
-                                            });
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();*/
                                     }
                                 });
-
-
-
-
-
-
-                           /* JSONObject object = jsonObject.getJSONObject("main");
-                            double temp = object.getDouble("temp");
-                            temptv.setText("Temperature\n" + temp + "°C");
-
-                            //find country
-                            JSONObject object8 = jsonObject.getJSONObject("sys");
-                            String count = object8.getString("country");
-                            country.setText(count + "  :");
-
-                            //find city
-                            String city = jsonObject.getString("name");
-                            city_nam.setText(city);
-
-                            //find icon
-                            JSONArray jsonArray = jsonObject.getJSONArray("weather");
-                            JSONObject obj = jsonArray.getJSONObject(0);
-                            String icon = obj.getString("icon");
-                            Picasso.get().load("http://openweathermap.org/img/wn/" + icon + "@2x.png").into(imageView);*/
-
 
                             } catch (JSONException e) {
 
